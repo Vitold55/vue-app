@@ -10,9 +10,8 @@
                         <v-list-tile-action>
                             <v-checkbox
                                 color="primary"
-                                @change="markDone(order)"
-                                v-model="order.done"
-                                :value="order.done"
+                                @click.prevent="markDone(order)"
+                                :input-value="order.done"
                             >
                             </v-checkbox>
                         </v-list-tile-action>
@@ -51,7 +50,6 @@
       },
       methods: {
         markDone (order) {
-          if (order.done) return
           order.done = true
         }
       }
