@@ -29,7 +29,9 @@
                 class="hidden-md-and-up"
             ></v-toolbar-side-icon>
 
-            <v-toolbar-title class="white--text">Ad application</v-toolbar-title>
+            <v-toolbar-title class="white--text">
+                <router-link to="/" tag="span" class="pointer">Ad application</router-link>
+            </v-toolbar-title>
 
             <v-spacer></v-spacer>
 
@@ -93,3 +95,9 @@ export default {
   name: 'App'
 }
 </script>
+
+<style scoped>
+    .pointer{
+        cursor: pointer;
+    }
+</style>
