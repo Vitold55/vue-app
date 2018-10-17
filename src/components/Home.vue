@@ -20,7 +20,7 @@
 
         <v-container grid-list-lg>
             <v-layout row wrap>
-                <v-flex xs12 sm6 md4 v-for="ad of ads">
+                <v-flex xs12 sm6 md4 v-for="ad of ads" :key="ad.id">
                     <v-card>
                         <v-img
                             :src="ad.imageSrc"
