@@ -5,9 +5,9 @@
                 <v-flex xs12>
                     <v-carousel>
                         <v-carousel-item
-                            v-for="ad in ads"
-                            :key="ad.id"
-                            :src="ad.imageSrc"
+                                v-for="ad in promoAds"
+                                :key="ad.id"
+                                :src="ad.imageSrc"
                         >
                             <div class="car-link">
                                 <v-btn :to="'/ad/' + ad.id" class="error">{{ ad.title }}</v-btn>
@@ -23,8 +23,8 @@
                 <v-flex xs12 sm6 md4 v-for="ad of ads" :key="ad.id">
                     <v-card>
                         <v-img
-                            :src="ad.imageSrc"
-                            height="200px"
+                                :src="ad.imageSrc"
+                                height="200px"
                         ></v-img>
 
                         <v-card-title primary-title>
@@ -49,35 +49,17 @@
 <script>
     export default {
       name: 'Home',
-      data () {
-        return {
-          ads: [
-            {
-              title: 'First ad',
-              description: 'First ad description',
-              promo: false,
-              imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-              id: 1
-            },
-            {
-              title: 'Second ad',
-              description: 'Second ad description',
-              promo: false,
-              imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-              id: 2
-            },
-            {
-              title: 'Third ad',
-              description: 'Third ad description',
-              promo: false,
-              imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-              id: 3
-            }
-          ]
+      computed: {
+        promoAds () {
+          return this.$store.getters.promoAds
+        },
+        ads () {
+          return this.$store.getters.ads
         }
       }
     }
 </script>
+
 
 <style scoped>
     .car-link{

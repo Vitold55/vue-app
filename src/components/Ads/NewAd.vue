@@ -74,14 +74,15 @@
       },
       methods: {
         createAd () {
-          if (this.$refs.from.validate()) {
+          if (this.$refs.form.validate()) {
             const ad = {
               title: this.title,
               description: this.description,
-              promo: this.promo
+              promo: this.promo,
+              imageSrc: 'https://i1.wp.com/wp.laravel-news.com/wp-content/uploads/2018/01/vue-spa-with-laravel.png?resize=2200%2C1125'
             }
 
-            console.log(ad)
+            this.$store.dispatch('createAd', ad)
           }
         }
       }
