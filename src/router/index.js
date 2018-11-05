@@ -6,6 +6,7 @@ import Login from '@/components/Auth/Login'
 import Registration from '@/components/Auth/Registration'
 import NewAd from '@/components/Ads/NewAd'
 import AdsList from '@/components/Ads/AdsList'
+import Ad from '@/components/Ads/Ad'
 import Orders from '@/components/User/Orders'
 
 Vue.use(Router)
@@ -36,6 +37,11 @@ export default new Router({
       path: '/list',
       name: 'adsList',
       component: AdsList
+    },
+    {
+      path: '/ad/:id',
+      name: 'ad',
+      component: Ad
     },
     {
       path: '/orders',
