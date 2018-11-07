@@ -6,7 +6,7 @@ import router from './router'
 import store from './store'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import * as fb from 'firebase'
+import * as fb from 'firebase/app'
 import config from '../config/config'
 
 Vue.use(Vuetify)
