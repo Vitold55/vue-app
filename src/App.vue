@@ -55,7 +55,27 @@
 
         <v-footer app></v-footer>
 
+        <!-- Errors displaying -->
+        <div v-if="error">
+            <v-snackbar
+                :multi-line="true"
+                :timeout="5000"
+                color="error"
+                value="true"
+            >
+                {{ error }}
+                <v-btn
+                        dark
+                        flat
+                        @click="closeError"
+                >
+                    Close
+                </v-btn>
+            </v-snackbar>
+        </div>
+
     </v-app>
+
 </template>
 
 <script>
@@ -90,6 +110,16 @@ export default {
           url: '/list'
         }
       ]
+    }
+  },
+  computed: {
+    error () {
+      return this.$store.getters.error
+    }
+  },
+  methods: {
+    closeError () {
+      this.$store.dispatch('clearError')
     }
   },
   name: 'App'
