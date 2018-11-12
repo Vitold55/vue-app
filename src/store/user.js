@@ -13,7 +13,11 @@ export default {
   },
   mutations: {
     setUser (state, id) {
-      state.user = new User(id)
+      if (id !== null) {
+        state.user = new User(id)
+      } else {
+        state.user = null
+      }
     }
   },
   actions: {
@@ -42,11 +46,21 @@ export default {
         commit('setError', error.message)
         throw error
       }
+    },
+    autoLogin ({commit}, payload) {
+      commit('setUser', new User(payload.id))
+    },
+    logoutUser ({commit}) {
+      fb.auth().signOut()
+      commit('setUser', null)
     }
   },
   getters: {
     user (state) {
       return state.user
+    },
+    isUserLoggedIn (state) {
+      return state.user !== null
     }
   }
 }

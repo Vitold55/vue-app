@@ -20,6 +20,20 @@
                         <v-list-tile-title v-text="link.title"></v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
+
+                <v-list-tile
+                    :key="'logout'"
+                    @click="logoutUser"
+                    v-if="isUserLoggedIn"
+                >
+                    <v-list-tile-action>
+                        <v-icon>exit_to_app</v-icon>
+                    </v-list-tile-action>
+
+                    <v-list-tile-content>
+                        <v-list-tile-title v-text="'Logout'"></v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
             </v-list>
         </v-navigation-drawer>
 
@@ -45,6 +59,15 @@
                     <v-icon>{{ link.icon }}</v-icon>
                     {{ link.title }}
                 </v-btn>
+
+                <v-btn
+                    flat
+                    v-if="isUserLoggedIn"
+                    @click="logoutUser"
+                >
+                    <v-icon>exit_to_app</v-icon>
+                    Logout
+                </v-btn>
             </v-toolbar-items>
 
         </v-toolbar>
@@ -65,9 +88,9 @@
             >
                 {{ error }}
                 <v-btn
-                        dark
-                        flat
-                        @click="closeError"
+                    dark
+                    flat
+                    @click="closeError"
                 >
                     Close
                 </v-btn>
@@ -82,8 +105,38 @@
 export default {
   data () {
     return {
-      drawer: false,
-      links: [
+      drawer: false
+    }
+  },
+  computed: {
+    error () {
+      return this.$store.getters.error
+    },
+    isUserLoggedIn () {
+      return this.$store.getters.isUserLoggedIn
+    },
+    links () {
+      if (this.isUserLoggedIn) {
+        return [
+          {
+            icon: 'bookmark_border',
+            title: 'Orders',
+            url: '/orders'
+          },
+          {
+            icon: 'note_add',
+            title: 'New ad',
+            url: '/new'
+          },
+          {
+            icon: 'list',
+            title: 'My ads',
+            url: '/list'
+          }
+        ]
+      }
+
+      return [
         {
           icon: 'lock',
           title: 'Login',
@@ -93,33 +146,17 @@ export default {
           icon: 'face',
           title: 'Registration',
           url: '/registration'
-        },
-        {
-          icon: 'bookmark_border',
-          title: 'Orders',
-          url: '/orders'
-        },
-        {
-          icon: 'note_add',
-          title: 'New ad',
-          url: '/new'
-        },
-        {
-          icon: 'list',
-          title: 'My ads',
-          url: '/list'
         }
       ]
-    }
-  },
-  computed: {
-    error () {
-      return this.$store.getters.error
     }
   },
   methods: {
     closeError () {
       this.$store.dispatch('clearError')
+    },
+    logoutUser () {
+      this.$store.dispatch('logoutUser')
+      this.$router.push('/')
     }
   },
   name: 'App'

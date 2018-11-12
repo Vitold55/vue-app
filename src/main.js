@@ -22,5 +22,11 @@ new Vue({
   template: '<App/>',
   created () {
     fb.initializeApp(config.fb)
+
+    fb.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.$store.dispatch('autoLogin', user)
+      }
+    })
   }
 })
