@@ -28,14 +28,16 @@
                     <v-btn
                         color="blue-grey"
                         class="warning"
+                        @click="triggerUpload"
                     >
                         Upload
                         <v-icon right dark>cloud_upload</v-icon>
                     </v-btn>
+                    <input type="file" accept="image/*" ref="fileInput" style="display: none" @change="fileUpload">
                 </div>
 
                 <div>
-                    <img src="" alt="">
+                    <img :src="imageSrc" alt="" v-if="imageSrc" width="200">
                 </div>
 
                 <div>
@@ -52,7 +54,7 @@
                         :loading="loading"
                         class="success"
                         @click="createAd"
-                        :disabled="!valid || loading"
+                        :disabled="!valid || !image || loading"
                     >
                         Create ad
                     </v-btn>
@@ -70,7 +72,9 @@
           title: '',
           description: '',
           promo: false,
-          valid: false
+          valid: false,
+          image: null,
+          imageSrc: ''
         }
       },
       computed: {
@@ -80,12 +84,12 @@
       },
       methods: {
         createAd () {
-          if (this.$refs.form.validate()) {
+          if (this.$refs.form.validate() && this.image) {
             const ad = {
               title: this.title,
               description: this.description,
               promo: this.promo,
-              imageSrc: 'https://i1.wp.com/wp.laravel-news.com/wp-content/uploads/2018/01/vue-spa-with-laravel.png?resize=2200%2C1125'
+              image: this.image
             }
 
             this.$store.dispatch('createAd', ad)
@@ -95,6 +99,19 @@
               })
               .catch(() => {})
           }
+        },
+        triggerUpload () {
+          this.$refs.fileInput.click()
+        },
+        fileUpload (e) {
+          const file = e.target.files[0]
+
+          const reader = new FileReader()
+          reader.onload = () => {
+            this.imageSrc = reader.result
+          }
+          reader.readAsDataURL(file)
+          this.image = file
         }
       }
     }

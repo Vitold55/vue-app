@@ -1,5 +1,6 @@
 import * as fb from 'firebase/app'
 import 'firebase/database'
+import 'firebase/storage'
 
 class Ad {
   constructor (title, description, imageSrc = '', owner, promo = false, id = null) {
@@ -28,11 +29,11 @@ export default {
     async createAd ({commit, getters}, payload) {
       commit('setLoading', true)
       commit('clearError')
-      console.log(getters.user)
+
       const ad = new Ad(
         payload.title,
         payload.description,
-        payload.imageSrc,
+        '',
         getters.user.id,
         payload.promo
       )
@@ -40,9 +41,19 @@ export default {
       try {
         const newAd = await fb.database().ref('ads').push(ad)
 
+        const image = payload.image
+        const imageExt = image.name.slice(image.name.lastIndexOf('.'))
+
+        const fileData = await fb.storage().ref(`ads/${newAd.key}${imageExt}`).put(image)
+        const filePath = fileData.metadata.name
+        const imageSrc = await fb.storage().ref('ads').child(filePath).getDownloadURL()
+
+        await fb.database().ref('ads').child(newAd.key).update({imageSrc})
+
         commit('createAd', {
           ...ad,
-          id: newAd.key
+          id: newAd.key,
+          imageSrc
         })
       } catch (error) {
         commit('setLoading', false)
@@ -87,7 +98,7 @@ export default {
     },
     adById (state) {
       return adId => {
-        return state.ads.find(ad => ad.id === parseFloat(adId))
+        return state.ads.find(ad => ad.id === adId)
       }
     }
   }
