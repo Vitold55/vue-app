@@ -33,7 +33,7 @@
                         <v-icon right dark>cloud_upload</v-icon>
                     </v-btn>
                 </div>
-                
+
                 <div>
                     <img src="" alt="">
                 </div>
@@ -49,9 +49,10 @@
                 <div>
                     <v-spacer></v-spacer>
                     <v-btn
+                        :loading="loading"
                         class="success"
                         @click="createAd"
-                        :disabled="!valid"
+                        :disabled="!valid || loading"
                     >
                         Create ad
                     </v-btn>
@@ -72,6 +73,11 @@
           valid: false
         }
       },
+      computed: {
+        loading () {
+          return this.$store.getters.loading
+        }
+      },
       methods: {
         createAd () {
           if (this.$refs.form.validate()) {
@@ -83,6 +89,11 @@
             }
 
             this.$store.dispatch('createAd', ad)
+              .then(() => {
+                this.$store.dispatch('setLoading', false)
+                this.$router.push('/list')
+              })
+              .catch(() => {})
           }
         }
       }
