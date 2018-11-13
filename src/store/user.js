@@ -12,12 +12,8 @@ export default {
     user: null
   },
   mutations: {
-    setUser (state, id) {
-      if (id !== null) {
-        state.user = new User(id)
-      } else {
-        state.user = null
-      }
+    setUser (state, payload) {
+      state.user = payload
     }
   },
   actions: {
@@ -26,7 +22,7 @@ export default {
       commit('clearError')
       try {
         const user = await fb.auth().createUserWithEmailAndPassword(email, password)
-        commit('setUser', user.uid)
+        commit('setUser', new User(user.uid))
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
@@ -39,7 +35,8 @@ export default {
       commit('clearError')
       try {
         const user = await fb.auth().signInWithEmailAndPassword(email, password)
-        commit('setUser', user.uid)
+
+        commit('setUser', new User(user.user.uid))
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
@@ -48,7 +45,7 @@ export default {
       }
     },
     autoLogin ({commit}, payload) {
-      commit('setUser', new User(payload.id))
+      commit('setUser', new User(payload.uid))
     },
     logoutUser ({commit}) {
       fb.auth().signOut()
