@@ -33,26 +33,26 @@ export default new Router({
       path: '/new',
       name: 'newAdd',
       component: NewAd,
-      beforeEnter: AuthGuard
+      beforeRouteEnter: AuthGuard
     },
     {
       path: '/list',
       name: 'adsList',
       component: AdsList,
-      beforeEnter: AuthGuard
+      beforeRouteEnter: AuthGuard
     },
     {
       path: '/ad/:id',
       props: true,
       name: 'ad',
       component: Ad,
-      beforeEnter: AuthGuard
+      beforeRouteEnter: AuthGuard
     },
     {
       path: '/orders',
       name: 'orders',
       component: Orders,
-      beforeEnter: AuthGuard
+      beforeRouteEnter: AuthGuard
     }
   ],
   mode: 'history'
