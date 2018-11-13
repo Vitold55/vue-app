@@ -83,6 +83,11 @@
               .catch(err => console.log(err))
           }
         }
+      },
+      created () {
+        if (this.$route.query['loginError']) {
+          this.$store.dispatch('setError', 'Please, sign in to see this page')
+        }
       }
     }
 </script>
