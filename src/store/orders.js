@@ -1,22 +1,63 @@
+import * as fb from 'firebase/app'
+import 'firebase/database'
+
+class Order {
+  constructor (name, phone, adId, done = false, id = null) {
+    this.name = name
+    this.phone = phone
+    this.adId = adId
+    this.done = done
+    this.id = id
+  }
+}
+
 export default {
   state: {
     orders: []
   },
   mutations: {
-    createOrder (state, payload) {
-      state.orders.push(payload)
+    loadOrders (state, payload) {
+      state.orders = payload
     }
   },
   actions: {
     async createOrder ({commit}, payload) {
-      commit('createOrder', payload)
+      const order = new Order(payload.name, payload.phone, payload.adId)
+      await fb.database().ref(`users/${payload.ownerId}/orders`).push(order)
+    },
+    async fetchOrders ({commit, getters}) {
+      commit('setLoading', true)
+      commit('clearError')
 
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve()
-        }, 4000)
-      })
+      let ordersRes = []
+
+      try {
+        const fbVal = await fb.database().ref(`users/${getters.user.id}/orders`).once('value')
+        const orders = fbVal.val()
+
+        Object.keys(orders).forEach(key => {
+          const order = orders[key]
+          ordersRes.push(new Order(order.name, order.phone, order.adId, order.done, key))
+        })
+
+        commit('loadOrders', ordersRes)
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
     }
   },
-  getters: {}
+  getters: {
+    doneOrders (state) {
+      return state.orders.filter(order => order.done)
+    },
+    undoneOrders (state) {
+      return state.orders.filter(order => !order.done)
+    },
+    orders (state, getters) {
+      return getters.undoneOrders.concat(getters.doneOrders)
+    }
+  }
 }
