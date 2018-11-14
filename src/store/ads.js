@@ -23,6 +23,14 @@ export default {
     },
     loadAds (state, payload) {
       state.ads = payload
+    },
+    editAd (state, {title, description, id}) {
+      const ad = state.ads.find(a => {
+        return a.id === id
+      })
+
+      ad.title = title
+      ad.description = description
     }
   },
   actions: {
@@ -83,6 +91,24 @@ export default {
         commit('setLoading', false)
         commit('setError', error.message)
         throw error
+      }
+    },
+    async editAd ({commit}, {title, description, id}) {
+      commit('clearError')
+      commit('setLoading', true)
+
+      try {
+        await fb.database().ref('ads').child(id).update({
+          title,
+          description
+        })
+
+        commit('editAd', {title, description, id})
+        commit('setLoading', false)
+      } catch (e) {
+        commit('setError', e.message)
+        commit('setLoading', false)
+        throw e
       }
     }
   },
