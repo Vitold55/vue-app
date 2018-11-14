@@ -37,7 +37,7 @@
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn flat :to="'/ad/' + ad.id">Open</v-btn>
-                            <v-btn range color="primary">Buy</v-btn>
+                            <AppBuyModal :ad="ad"></AppBuyModal>
                         </v-card-actions>
                     </v-card>
                 </v-flex>
