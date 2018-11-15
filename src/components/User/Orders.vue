@@ -4,7 +4,7 @@
             <v-flex xs12 sm6 offset-sm3>
                 <h1 class="text--secondary mb-3">Orders</h1>
 
-                <v-list subheader two-line v-if="orders.length > 0" v-for="order in orders" :key="order.id">
+                <v-list subheader two-line v-if="orders.length > 0 && !loader" v-for="order in orders" :key="order.id">
 
                     <v-list-tile>
                         <v-list-tile-action>
@@ -27,6 +27,14 @@
                     </v-list-tile>
 
                 </v-list>
+
+                <div v-else class="text-xs-center pt-5">
+                    <v-progress-circular
+                        :size="100"
+                        color="primary"
+                        indeterminate
+                    ></v-progress-circular>
+                </div>
             </v-flex>
         </v-layout>
     </v-container>
@@ -38,6 +46,9 @@
       computed: {
         orders () {
           return this.$store.getters.orders
+        },
+        loader () {
+          return this.$store.getters.loader
         }
       },
       methods: {
@@ -46,7 +57,11 @@
         }
       },
       created () {
-        this.$store.dispatch('fetchOrders')
+        if (this.$store.getters.isUserLoggedIn) {
+          this.$store.dispatch('fetchOrders')
+        } else {
+          this.$router.push('/')
+        }
       }
     }
 </script>

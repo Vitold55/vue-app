@@ -21,7 +21,7 @@ export default {
     }
   },
   actions: {
-    async createOrder ({commit}, payload) {
+    async createOrder ({commit, router}, payload) {
       const order = new Order(payload.name, payload.phone, payload.adId)
       await fb.database().ref(`users/${payload.ownerId}/orders`).push(order)
     },
