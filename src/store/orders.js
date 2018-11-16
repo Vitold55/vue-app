@@ -18,6 +18,10 @@ export default {
   mutations: {
     loadOrders (state, payload) {
       state.orders = payload
+    },
+    updateOrder (state, id) {
+      let order = state.orders.find(order => order.id === id)
+      order.done = true
     }
   },
   actions: {
@@ -41,6 +45,21 @@ export default {
         })
 
         commit('loadOrders', ordersRes)
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setLoading', false)
+        commit('setError', error.message)
+        throw error
+      }
+    },
+    async markOrderDone ({commit, getters}, id) {
+      commit('setLoading', true)
+      commit('clearError')
+
+      try {
+        await fb.database().ref(`users/${getters.user.id}/orders`).child(id).update({done: true})
+        commit('updateOrder', id)
+
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)

@@ -53,7 +53,10 @@
       },
       methods: {
         markDone (order) {
-          order.done = true
+          if (order.done) {
+            return
+          }
+          this.$store.dispatch('markOrderDone', order.id)
         }
       },
       created () {
